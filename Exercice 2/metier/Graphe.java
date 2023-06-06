@@ -117,7 +117,7 @@ public class Graphe
 
 	public void initialiserTour()
 	{
-		this.couleurMax      = (int) ( Math.random() * 5 ) + 5;
+		this.couleurMax      = (int) ( Math.random() * 5 ) + 50;
 		this.nbColorier      = 0;
 		this.cptCouleur      = 0;
 	}
@@ -139,20 +139,18 @@ public class Graphe
 
 	public boolean colorier(int id)
 	{
+		if (id <= -1) return false;
+
 		Arete a = this.lstArete.get(id);
 		Color couleur = COLORS.get( this.cptCouleur );
 
 		if (a.getCouleur() != null) return false;
 
-		boolean couleurAdjacente = false;
-
 		for (Arete arete : a.getPointDepart().getAretesAdjacentes())
-			if (arete.getCouleur().equals( couleur )) couleurAdjacente = true;
+			if (couleur.equals( arete.getCouleur() )) return false;
 
 		for (Arete arete : a.getPointArrivee().getAretesAdjacentes())
-			if (arete.getCouleur().equals( couleur )) couleurAdjacente = true;
-
-		if (!couleurAdjacente) return false;
+			if (couleur.equals( arete.getCouleur() )) return false;
 
 		a.setCouleur( couleur );
 
@@ -172,41 +170,44 @@ public class Graphe
 		return this.lstArete.indexOf(a);
 	}
 
-	public Arete trouverArete(int x, int y)
+	public Arete trouverArete(Point a, Point b)
 	{
-		Double  minDistance = null;
-		Arete   min = null;
+		for (Arete areteA : a.getAretesAdjacentes())
+			for (Arete areteB : b.getAretesAdjacentes())
+				if (areteA.equals(areteB)) return areteA;
 
-		for (Arete arete : this.lstArete)
+		return null;
+	}
+
+	public Point trouverPoint(double x, double y)
+	{
+		// Diamètre : 10px
+
+		//double distance = Math.sqrt(  );
+		Double distance = null;
+		Point  point    = null;
+
+		for (Point p : this.lstPoint)
 		{
-			double ix = 0.0 + arete.getPointDepart().getX() - arete.getPointArrivee().getX();
-			double iy = 0.0 + arete.getPointDepart().getY() - arete.getPointArrivee().getY();
+			/*Double d = Math.sqrt( (p.getX() - x) * (p.getX() - x) + (p.getY() - y) * (p.getY() - y) );
 
-			double magnitudeI = Math.sqrt(ix * ix + iy * iy);
-			double nx = ix / magnitudeI;
-			double ny = iy / magnitudeI;
-
-			double dotProduct = 1.0 * x * nx + y * ny;
-			double vx = dotProduct * nx;
-			double vy = dotProduct * ny;
-
-			double normeV = Math.sqrt(vx * vx + vy * vy);
-
-			if (min != null && minDistance >= normeV )
+			if (distance == null)
 			{
-				minDistance = normeV;
-				min = arete;
+				distance = d;
+				point = p;
 			}
-			else
+
+			if ( ( point == null || distance >= d ) && distance <= 5 )
 			{
-				if (normeV <= 10)
-				{
-					minDistance = normeV;
-					min = arete;
-				}
-			}
+				point    = p;
+				distance = d;
+			}*/
+
+			distance = Math.pow((x - p.getX()) / (double) 5.0, 2) + Math.pow((y - p.getY()) / (double) 5.0, 2);
+
+			if (distance <= 1.0) return p;
 		}
 
-		return min;
+		return point;
 	}
 }

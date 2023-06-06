@@ -28,10 +28,11 @@ public class Controleur
 	public ArrayList<Point> getSommets() { return this.metier.getPoints();} 
 	public ArrayList<Arete> getAretes () { return this.metier.getAretes();}
 
-	public Color   getColor     ( int id )     { return this.metier.getColor( id );     }
-	public boolean colorier     ( int id )     { return this.metier.colorier( id );     }
-	public Arete   trouverArete (int x, int y) { return this.metier.trouverArete(x, y); }
-	public int     getId        (Arete a)      { return this.metier.getId (a);          }
+	public Color   getColor     ( int id )           { return this.metier.getColor( id );     }
+	public boolean colorier     ( int id )           { return this.metier.colorier( id );     }
+	public Arete   trouverArete (Point x, Point y)   { return this.metier.trouverArete(x, y); }
+	public Point   trouverPoint(double x, double y)  { return this.metier.trouverPoint(x, y); }
+	public int     getId        (Arete a)            { return this.metier.getId (a);          }
 
 	public void majIhm () { this.ihm.maj() ;}
 
@@ -39,6 +40,8 @@ public class Controleur
 	public int getLargeurIHM() { return this.ihm.getWidth (); }
 
 	public Dimension getTailleEcran(){ return this.tailleEcran; }
+	public int getCoef() { return this.ihm.getCoef() ; }
+
 
 
 	public static void main( String[] args )

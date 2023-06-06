@@ -22,6 +22,7 @@ public class PanelDessin extends JPanel
 	private int    maxX;
 	private int    maxY;
 
+	private Point point1, point2;
 
 	private Controleur ctrl;
 	private Graphics2D g2;
@@ -71,10 +72,13 @@ public class PanelDessin extends JPanel
 
 		if (this.coef < 1) this.coef = 1;
 
-		this.margeGraphe = 10 * this.coef;
+		this.margeGraphe = 0;
 
 		for (Arete a : this.ctrl.getAretes())
 		{
+			if (a.getCouleur() != null ) g2.setColor(a.getCouleur());
+			else                         g2.setColor(Color.BLACK);
+
 			Point p1 = a.getPointDepart();
 			Point p2 = a.getPointArrivee();
 			g2.drawLine((p1.getX()*this.coef) + this.margeGraphe, (p1.getY()*this.coef) + this.margeGraphe, 
@@ -82,12 +86,13 @@ public class PanelDessin extends JPanel
 		}
 
 
-		int d = 10 * this.coef;
 		for (Point p : this.ctrl.getSommets())
 		{
-			Ellipse2D.Double circle = new Ellipse2D.Double(p.getX() * this.coef + this.margeGraphe - d/2,
-			                                               p.getY() * this.coef + this.margeGraphe - d/2, 
-														   d,d);
+		 	if (p == this.point1 || p == this.point2) g2.setColor(Color.RED);
+			else                                      g2.setColor(Color.BLACK);
+			Ellipse2D.Double circle = new Ellipse2D.Double(p.getX() * this.coef + this.margeGraphe - 5,
+			                                               p.getY() * this.coef + this.margeGraphe - 5, 
+														   10,10);
    			g2.fill(circle);
 		}
 		 
@@ -97,27 +102,47 @@ public class PanelDessin extends JPanel
 	private class GereSouris extends MouseAdapter
 	{
 		int posX, posY;
-		Arete arete;
+		Point point1, point2;
 		Controleur ctrl;
 
 		public void mousePressed (MouseEvent e)
 		{
-			this.ctrl = PanelDessin.this.ctrl;
+			this.ctrl = PanelDessin.this.ctrl; //raccourci inhumain de l'argumentation
 			try
 			{
 				this.posX = e.getX();
 				this.posY = e.getY();
-				this.arete = this.ctrl.trouverArete( this.posX, this.posY );
-				if( this.arete != null )
+				
+				if (this.point1 == null)
 				{
-					System.out.println( this.ctrl.colorier( this.ctrl.getId( this.arete ) ) );
-					System.out.println( this.arete.getCouleur() );
-					//mettre aussi la couleur dnas l'ihm
+					this.point1 = this.ctrl.trouverPoint( this.posX*1.0/PanelDessin.this.coef  , this.posY*1.0/PanelDessin.this.coef );
+				} 
+				else
+				{
+					this.point2 = this.point1;
+					this.point1 = this.ctrl.trouverPoint( this.posX*1.0/PanelDessin.this.coef  , this.posY*1.0/PanelDessin.this.coef );
+				}
+				
+				if( this.point1 != null && this.point2 != null )
+				{
+					Arete a = this.ctrl.trouverArete(this.point1, this.point2);
+
+					if (a != null)
+						System.out.println("Une arête est trouvé.");
+					System.out.println( this.ctrl.colorier( this.ctrl.getId( a ) ) );
+					/*System.out.println( this.arete.getCouleur() );*/
+
+					PanelDessin.this.point1 = this.point1;
+					PanelDessin.this.point2 = this.point2;
+					PanelDessin.this.repaint();
 				}
 			}
 			catch( Exception ex )
 			{
+				ex.printStackTrace();
 			}
 		}
 	}
+
+	public int getCoef() { return this.coef ; }
 }

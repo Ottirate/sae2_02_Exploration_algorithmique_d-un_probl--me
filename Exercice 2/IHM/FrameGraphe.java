@@ -36,4 +36,6 @@ public class FrameGraphe extends JFrame
 	}
 
 	public void maj() { /*this.panelDessin.repaint();*/ }
+	public int getCoef() { return this.panelDessin.getCoef() ; }
+
 }
