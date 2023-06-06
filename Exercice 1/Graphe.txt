@@ -1,7 +1,7 @@
 1
 A	20	20	B:20:red C:30 E:40
 B	20	20	A B E
-C	20	20	A B E
+C	20	20	C B D
 2
 D	20	20	A B E
 E	20	20	A B E

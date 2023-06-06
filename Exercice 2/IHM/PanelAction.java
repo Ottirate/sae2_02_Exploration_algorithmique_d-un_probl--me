@@ -10,12 +10,14 @@ import java.awt.Color;
 
 import graphe.Controleur;
 
+import graphe.metier.Arete;
+
 public class PanelAction extends JPanel implements ActionListener
 {
 	private Controleur ctrl;
 
 	private JLabel lblSelection;
-	private JLabel lblCouleur;
+	private JPanel panelCouleur;
 
 	private JButton btnColorier;
 
@@ -26,18 +28,19 @@ public class PanelAction extends JPanel implements ActionListener
 		this.setLayout ( new BorderLayout(5,5) );
 
 		// Création des composants
-		JPanel panelControle = new JPanel(new GridLayout(2,1));
+		JPanel panelControle = new JPanel(new GridLayout(1,3));
 
 		this.lblSelection = new JLabel ();
-		this.lblCouleur   = new JLabel ();
+		this.panelCouleur   = new JPanel();
+		this.panelCouleur.setBackground(this.ctrl.getColor());
 
 		this.btnColorier = new JButton("Colorier !");
 
 		// Positionnement des composants
+		panelControle.add ( this.panelCouleur );
 		panelControle.add ( new JLabel("Arête selectionné : ")   );
 		panelControle.add ( this.lblSelection );
 
-		this.add(this.lblCouleur , BorderLayout.WEST  );
 		this.add(panelControle   , BorderLayout.CENTER);
 		this.add(this.btnColorier, BorderLayout.SOUTH );
 
@@ -47,8 +50,14 @@ public class PanelAction extends JPanel implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		// this.ctrl.ajouterPoint();
+		Arete a = this.ctrl.getArete(this.lblSelection.getText());
+
+		if (a != null) this.ctrl.colorier( this.ctrl.getId( a ) );
+
+		this.lblSelection.setText("");
+		this.ctrl.majIhm();
 	}
 
-	public void changerCouleur ( Color col ) { this.lblCouleur.setBackground(col); }
+	public void changerCouleur ( Color col ) { this.panelCouleur.setBackground(col); }
+	public void setAreteSelectionne (String nom) { this.lblSelection.setText(nom);}
 }

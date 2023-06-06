@@ -35,7 +35,8 @@ public class FrameGraphe extends JFrame
 		this.setVisible(true);
 	}
 
-	public void maj() { /*this.panelDessin.repaint();*/ }
+	public void maj() { this.panelDessin.repaint(); }
 	public int getCoef() { return this.panelDessin.getCoef() ; }
+	public void setAreteSelectionne (String nom) {this.panelAction.setAreteSelectionne(nom);}
 
 }

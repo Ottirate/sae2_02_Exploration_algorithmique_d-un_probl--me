@@ -4,6 +4,8 @@ import java.util.*;
 import java.nio.charset.StandardCharsets;
 import java.io.FileInputStream;
 import java.awt.Color;
+import java.awt.geom.Area;
+import java.awt.geom.Line2D;
 
 public class Graphe
 {
@@ -132,6 +134,8 @@ public class Graphe
 		return null;
 	}
 
+	public Color getColor() { return this.COLORS.get(this.cptCouleur);}
+
 	public Color getColor(int id)
 	{
 		return this.lstArete.get(id).getCouleur();
@@ -139,19 +143,10 @@ public class Graphe
 
 	public boolean colorier(int id)
 	{
-		if (id <= -1) return false;
+		if (!this.estColoriable(id)) return false;
 
 		Arete a = this.lstArete.get(id);
-		Color couleur = COLORS.get( this.cptCouleur );
-
-		if (a.getCouleur() != null) return false;
-
-		for (Arete arete : a.getPointDepart().getAretesAdjacentes())
-			if (couleur.equals( arete.getCouleur() )) return false;
-
-		for (Arete arete : a.getPointArrivee().getAretesAdjacentes())
-			if (couleur.equals( arete.getCouleur() )) return false;
-
+		Color couleur = COLORS.get( this.cptCouleur ); //Et une couleur
 		a.setCouleur( couleur );
 
 		this.nbColorier++;
@@ -162,8 +157,66 @@ public class Graphe
 		return true;
 	}
 
+	public boolean estColoriable (int id)
+	{
+		if (id < 0 || id > this.lstArete.size() ) return false;
+
+		//On récupérer l'arete
+		Arete a = this.lstArete.get(id);
+		Color couleur = COLORS.get( this.cptCouleur ); //Et une couleur
+
+		//Si le trait est déja pris
+		if (a.getCouleur() != null) return false;
+
+		// Si un des points appartient déja à une arete déja coloré 
+		for (Arete arete : a.getPointDepart().getAretesAdjacentes())
+			if (couleur.equals( arete.getCouleur() )) return false;
+
+		for (Arete arete : a.getPointArrivee().getAretesAdjacentes())
+			if (couleur.equals( arete.getCouleur() )) return false;
+
+
+		//Si l'arrete croise une arret déja coloré
+		if (this.arreteCroise(a)) return false;
+
+		return true;
+	}
+
+
+	private boolean arreteCroise (Arete a1)
+	{
+		int x1 = a1.getPointArrivee().getX();
+		int y1 = a1.getPointArrivee().getY();
+		int x2 = a1.getPointDepart ().getX();
+		int y2 = a1.getPointDepart ().getY();
+	
+
+		for (Arete a2 : this.lstArete )
+		{
+			if (a2.getCouleur() != null)
+			{
+				int x3 = a2.getPointArrivee().getX();
+				int y3 = a2.getPointArrivee().getY();
+				int x4 = a2.getPointDepart ().getX();
+				int y4 = a2.getPointDepart ().getY();
+			
+				if (Line2D.linesIntersect(x1, y1, x2, y2, x3, y3, x4, y4)) return true;
+			}
+		}
+		
+		return false;
+	}
+
 	public ArrayList<Point> getPoints() {return this.lstPoint;}
 	public ArrayList<Arete> getAretes() {return this.lstArete;}
+
+	public Arete getArete(String id)
+	{
+		for (Arete a : this.lstArete)
+			if (a.toString().equals(id))
+				return a;
+		return null;
+	}
 
 	public int              getId(Arete a)
 	{

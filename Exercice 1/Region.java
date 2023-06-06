@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+
 public class Region
 {
 	private String            nom;
@@ -16,15 +17,5 @@ public class Region
 		this.lstSommet.add(s);
 
 		s.setRegion(this);
-	}
-
-	public Sommet getSommet(String nom)
-	{
-		for (Sommet s : this.lstSommet)
-		{
-			if (s.getNom().equals(nom)) return s;
-		}
-
-		return null;
 	}
 }

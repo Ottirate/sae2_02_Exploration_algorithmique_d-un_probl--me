@@ -34,6 +34,13 @@ public class Controleur
 	public Point   trouverPoint(double x, double y)  { return this.metier.trouverPoint(x, y); }
 	public int     getId        (Arete a)            { return this.metier.getId (a);          }
 
+	public Color getColor () { return this.metier.getColor();}
+	public Arete getArete (String nom) { return this.metier.getArete(nom);}
+
+	public void setAreteSelectionne (String nom) { this.ihm.setAreteSelectionne(nom);}
+
+	public boolean estColoriable (int ind) { return this.metier.estColoriable(ind); }
+
 	public void majIhm () { this.ihm.maj() ;}
 
 	public int getHauteurIHM() { return this.ihm.getHeight(); }

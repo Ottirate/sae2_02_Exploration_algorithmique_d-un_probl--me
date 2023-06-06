@@ -47,8 +47,8 @@ public class PanelDessin extends JPanel
 		this.maxX = this.maxY = 0;
 		for (Point p : this.ctrl.getSommets())
 		{
-			if (p.getX() > this.maxX) this.maxX = p.getX();
-			if (p.getY() > this.maxY) this.maxY = p.getY();
+			if (p.getX() > this.maxX) this.maxX = p.getX() + 1; // pour éviter le /0
+			if (p.getY() > this.maxY) this.maxY = p.getY() + 1; // pour éviter le /0
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class PanelDessin extends JPanel
 		for (Arete a : this.ctrl.getAretes())
 		{
 			if (a.getCouleur() != null ) g2.setColor(a.getCouleur());
-			else                         g2.setColor(Color.BLACK);
+			else                         g2.setColor(Color.GRAY);
 
 			Point p1 = a.getPointDepart();
 			Point p2 = a.getPointArrivee();
@@ -88,8 +88,8 @@ public class PanelDessin extends JPanel
 
 		for (Point p : this.ctrl.getSommets())
 		{
-		 	if (p == this.point1 || p == this.point2) g2.setColor(Color.RED);
-			else                                      g2.setColor(Color.BLACK);
+		 	if (p == this.point1 || p == this.point2) g2.setColor(Color.BLACK);
+			else                                      g2.setColor(Color.GRAY);
 			Ellipse2D.Double circle = new Ellipse2D.Double(p.getX() * this.coef + this.margeGraphe - 5,
 			                                               p.getY() * this.coef + this.margeGraphe - 5, 
 														   10,10);
@@ -113,29 +113,33 @@ public class PanelDessin extends JPanel
 				this.posX = e.getX();
 				this.posY = e.getY();
 				
-				if (this.point1 == null)
+				Point p = this.ctrl.trouverPoint( this.posX*1.0/PanelDessin.this.coef  , this.posY*1.0/PanelDessin.this.coef );
+
+				if (p == null)
 				{
-					this.point1 = this.ctrl.trouverPoint( this.posX*1.0/PanelDessin.this.coef  , this.posY*1.0/PanelDessin.this.coef );
+					this.point1 = this.point2 = null;
 				} 
 				else
 				{
 					this.point2 = this.point1;
-					this.point1 = this.ctrl.trouverPoint( this.posX*1.0/PanelDessin.this.coef  , this.posY*1.0/PanelDessin.this.coef );
+					this.point1 = p;
 				}
 				
 				if( this.point1 != null && this.point2 != null )
 				{
 					Arete a = this.ctrl.trouverArete(this.point1, this.point2);
 
-					if (a != null)
-						System.out.println("Une arête est trouvé.");
-					System.out.println( this.ctrl.colorier( this.ctrl.getId( a ) ) );
+					if (this.ctrl.estColoriable(this.ctrl.getId( a )))
+						this.ctrl.setAreteSelectionne(a.toString());
+					else
+						this.point2 = null;
+					
 					/*System.out.println( this.arete.getCouleur() );*/
-
-					PanelDessin.this.point1 = this.point1;
-					PanelDessin.this.point2 = this.point2;
-					PanelDessin.this.repaint();
 				}
+
+				PanelDessin.this.repaint();
+				PanelDessin.this.point1 = this.point1;
+				PanelDessin.this.point2 = this.point2;
 			}
 			catch( Exception ex )
 			{
