@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
+import java.awt.Cursor;
 import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -103,7 +104,26 @@ public class PanelDessin extends JPanel {
 		
 		public boolean hoverShape(Point p) {
 			return this.ctrl.getSommets().stream().anyMatch(t -> {
-				return (p.x >= t.getX().x && p.y >= t.getPointA().y) && (p.x <= t.getPointB().x && p.y <= t.getPointB().y);
+				int hauteur = this.ctrl.getHauteurIHM() - 90;
+				int largeur = this.ctrl.getLargeurIHM() - 10;
+				
+				int coef, coef1, coef2;
+
+				coef1 = hauteur / (this.maxY);
+				coef2 = largeur / (this.maxX);
+
+				if (coef1 < coef2)
+					coef = coef1;
+				else
+					coef = coef2;
+
+				if (coef < 1)
+					coef = 1;
+				
+				int x = t.getX() * coef - 5;
+				int y = t.getY() * coef - 5;
+				
+				return (p.x >= x && p.y >= y) && (p.x <= (x + 10) && p.y <= (y + 10));
 			});
 		}
 
@@ -124,10 +144,10 @@ public class PanelDessin extends JPanel {
 			// List<Point> lstPoints = this.ctrl.getSommets();
 			
 			this.ctrl.getSommets().stream().forEach(p -> {
-				if (this.panel.hoverShape(e.getPoint()))
-					this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				if (panel.hoverShape(e.getPoint()))
+					panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 				else
-					this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			});
 			
 			if (this.panel.hoverShape(e.getPoint()))
