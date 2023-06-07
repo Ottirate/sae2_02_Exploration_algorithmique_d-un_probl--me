@@ -1,58 +1,117 @@
-/** Auteur : Equipe 1
-  * Date   : juin 2023
-*/
+/*
+ * Auteur : Équipe 1
+ * Date   : juin 2023
+ * */
 
-/*Paquetage*/
+
+/*      Paquetage      */
 package graphe.metier;
 
-/*Importations*/
+
+/*       Imports       */
 import java.util.*;
 import java.nio.charset.StandardCharsets;
 import java.io.FileInputStream;
 import java.awt.Color;
-import java.awt.geom.Area;
 import java.awt.geom.Line2D;
+
 
 public class Graphe
 {
-	/* ATTRIBUTS DE CLASSE */
+	/* Attributs Constants */
 	private final String            FICHIER = "./Graphe.data";
 	private final ArrayList<Color>  COLORS  = new ArrayList<>(Arrays.asList(
 		Color.RED,
 		Color.BLUE
 	));
 
-	/* LISTES DES ELEMENTS */
+	/*      Attributs      */
 	private ArrayList<Point>  lstPoint;
 	private ArrayList<Arete>  lstArete;
 	private ArrayList<Region> lstRegion;
 
-	/* DONNES JOUEUR */
 	private int               nbColorier;
 	private int               cptCouleur;
 	private int               couleurMax;
 
-	/*Constructeur*/
+
+	/*    Constructeur     */
 	public Graphe()
 	{
 		// Lecture des données
 		this.initialiser();
 
 		//Début de partie
-		this.couleurMax      = (int) ( Math.random() * 5 ) + 15;
-		this.nbColorier      = 0;
-		this.cptCouleur      = 0;
+		this.couleurMax = (int) ( Math.random() * 5 ) + 15;
+		this.nbColorier = 0;
+		this.cptCouleur = 0;
 
 	}
 
-	/*Méthodes - Initialisations*/
+
+	/*     Accesseurs      */
+	public Point getPoint(int id)
+	{
+		for (Point p : this.lstPoint) if (p.getId() == id) return p;
+
+		return null;
+	}
+
+
+	public Color getColor() {
+		return this.cptCouleur == COLORS.size() ? Color.WHITE : this.COLORS.get(this.cptCouleur);
+	}
+
+
+	public ArrayList<Point>  getPoints()  { return this.lstPoint  ; }
+	public ArrayList<Arete>  getAretes()  { return this.lstArete  ; }
+	public ArrayList<Region> getRegions() { return this.lstRegion ; }
+
+
+	public Arete getArete(String id)
+	{
+		for (Arete a : this.lstArete)
+			if (a.toString().equals(id))
+				return a;
+
+		return null;
+	}
+
+
+	public Arete trouverArete(Point a, Point b)
+	{
+		for (Arete areteA : a.getAretesAdjacentes())
+			for (Arete areteB : b.getAretesAdjacentes())
+				if (areteA.equals(areteB)) return areteA;
+
+		return null;
+	}
+
+
+	public Point trouverPoint(double x, double y)
+	{
+		double distance;
+
+		for (Point p : this.lstPoint)
+		{
+			distance = Math.pow((x - p.getX()) / 5.0, 2) + Math.pow((y - p.getY()) / 5.0, 2);
+
+			if (distance <= 1.0) return p;
+		}
+
+		return null;
+	}
+
+
+	/*      Méthodes       */
 	private void initialiser()
 	{
 		// Création des listes
 		this.lstPoint  = new ArrayList<>();
 		this.lstArete  = new ArrayList<>();
 		this.lstRegion = new ArrayList<>();
-		
+
+
 		try
 		{
 			Scanner sc = new Scanner ( new FileInputStream ( FICHIER ), StandardCharsets.UTF_8);
@@ -60,6 +119,7 @@ public class Graphe
 			sc.nextLine(); // Saut de ligne
 
 			String[] ensVal = sc.nextLine().split("\t");
+
 
 			// Points
 			Point p;
@@ -79,6 +139,7 @@ public class Graphe
 			sc.nextLine(); // Saut de ligne
 			ensVal = sc.nextLine().split("\t");
 
+
 			// Régions
 			Region region;
 			while (ensVal.length > 1)
@@ -97,8 +158,8 @@ public class Graphe
 			sc.nextLine(); // Saut de ligne
 			ensVal = sc.nextLine().split("\t");
 
+
 			// Arêtes
-			
 			while (ensVal.length > 1)
 			{
 				for (int i = 0; i < ensVal.length - 1; i ++)
@@ -108,7 +169,7 @@ public class Graphe
 					p1 = this.lstPoint.get(Integer.parseInt(ensVal[i]    ) - 1);
 					p2 = this.lstPoint.get(Integer.parseInt(ensVal[i + 1]) - 1);
 
-					this.lstArete.add( new Arete (p2, p1, 0) );
+					this.lstArete.add( new Arete (p2, p1) );
 				}
 			
 				ensVal = sc.nextLine().split("\t");
@@ -123,93 +184,43 @@ public class Graphe
 	}
 
 
-	/*Accesseurs*/
-	public Point getPoint(int id)
+	public void colorier( Arete a )
 	{
-		for (Point p : this.lstPoint)
-		{
-			if (p.getId() == id) return p;
-		}
+		if ( this.cptCouleur == COLORS.size() ) return;
+		if (               a == null          ) return;
 
-		return null;
-	}
-
-	public Color getColor() { return this.cptCouleur == COLORS.size() ? Color.WHITE : this.COLORS.get(this.cptCouleur);}
-
-	public Color getColor(int id) { return this.lstArete.get(id).getCouleur();
-	}
-
-	public ArrayList<Point>  getPoints()  { return this.lstPoint ; }
-	public ArrayList<Arete>  getAretes()  { return this.lstArete ; }
-	public ArrayList<Region> getRegions() { return this.lstRegion; }
-
-	public Arete getArete(String id)
-	{
-		for (Arete a : this.lstArete)
-			if (a.toString().equals(id))
-				return a;
-		return null;
-	}
-
-	public int getId(Arete a)
-	{
-		return this.lstArete.indexOf(a);
-	}
-
-	public Arete trouverArete(Point a, Point b)
-	{
-		for (Arete areteA : a.getAretesAdjacentes())
-			for (Arete areteB : b.getAretesAdjacentes())
-				if (areteA.equals(areteB)) return areteA;
-
-		return null;
-	}
-
-	/*Méthodes*/
-
-	public boolean colorier(int id)
-	{
-		if ( this.cptCouleur == COLORS.size()   ) return false;
-
-		Arete a = this.lstArete.get(id);
-		Color couleur = COLORS.get( this.cptCouleur ); //Et une couleur
-		a.setCouleur( couleur );
+		// Récupération de la couleur actuelle
+		a.setCouleur( COLORS.get( this.cptCouleur ) );
 
 		this.nbColorier++;
 
 		if ( this.nbColorier >= this.couleurMax ) { this.cptCouleur++; this.couleurMax += (int) ( Math.random() * 5 ) + 15; }
-
-		return true;
 	}
 
-	public boolean estColoriable (int id)
+
+	public boolean estColoriable (Arete a)
 	{
-		if ( this.cptCouleur == COLORS.size()   ) return false;
-		if (id < 0 || id > this.lstArete.size() ) return false;
+		if ( this.cptCouleur == COLORS.size() ) return false;
+		if (               a == null          ) return false;
 
-		// On récupérer l'arete
-		Arete a = this.lstArete.get(id);
-		Color couleur = COLORS.get( this.cptCouleur ); //Et une couleur
-
-		// Si le trait est déja pris
-		if (a.getCouleur() != null) return false;
+		// Si l'arête est deja prise
+		if ( a.getCouleur() != null ) return false;
 
 		// Si c'est le premier trait
-		if (nbColorier == 0) return true;
+		if ( this.nbColorier == 0   ) return true;
 
-		// Si l'arrete croise une arret déja colorée
-		if (this.arreteCroise(a)) return false;
+		// Si l'arête croise une arête deja colorée
+		if ( this.areteCroise(a)    ) return false;
 
 		// Cycle
-		if (this.aCycle(a)) return false;
+		if ( this.aCycle(a)         ) return false;
 
-		// Si il a une arete autour d'elle coloriée
+		// S'il a une arête autour d'elle coloriée
 		for (Arete arete : a.getPointDepart().getAretesAdjacentes())
-			if (arete.getCouleur() != null) return true;
-		
+			if ( arete.getCouleur() != null ) return true;
 
 		for (Arete arete : a.getPointArrivee().getAretesAdjacentes())
-			if (arete.getCouleur() != null) return true;
+			if ( arete.getCouleur() != null ) return true;
 
 		return false;
 	}
@@ -220,15 +231,15 @@ public class Graphe
 		Color c = COLORS.get( this.cptCouleur );
 	
 		for (Arete a : a1.getPointDepart().getAretesAdjacentes())
-			if (c.equals(a.getCouleur()))
+			if ( c.equals(a.getCouleur()) )
 				for (Arete a2 : a1.getPointArrivee().getAretesAdjacentes())
-					if (c.equals(a2.getCouleur())) return true;
+					if ( c.equals(a2.getCouleur()) ) return true;
 
 		return false;
 	}
 
 
-	private boolean arreteCroise (Arete a1)
+	private boolean areteCroise(Arete a1)
 	{
 		int x1 = a1.getPointArrivee().getX();
 		int y1 = a1.getPointArrivee().getY();
@@ -237,7 +248,7 @@ public class Graphe
 
 		for (Arete a2 : this.lstArete )
 		{
-			if (a2.getCouleur() != null && !a1.pointIdentique(a2))
+			if ( a2.getCouleur() != null && !a1.pointIdentique(a2) )
 			{
 
 				int x3 = a2.getPointArrivee().getX();
@@ -251,25 +262,4 @@ public class Graphe
 
 		return false;
 	}
-
-	public Point trouverPoint(double x, double y)
-	{
-		// Diamètre : 10px
-
-		//double distance = Math.sqrt(  );
-		Double distance = null;
-		Point  point    = null;
-
-		for (Point p : this.lstPoint)
-		{
-			distance = Math.pow((x - p.getX()) / (double) 5.0, 2) + Math.pow((y - p.getY()) / (double) 5.0, 2);
-
-			if (distance <= 1.0) return p;
-		}
-
-		return point;
-	}
-	
-	
-
 }
