@@ -15,17 +15,19 @@ import java.awt.geom.Line2D;
 
 public class Graphe
 {
-	/*Attributs*/
+	/* ATTRIBUTS DE CLASSE */
 	private final String            FICHIER = "./Graphe.data";
 	private final ArrayList<Color>  COLORS  = new ArrayList<>(Arrays.asList(
 		Color.RED,
 		Color.BLUE
 	));
 
+	/* LISTES DES ELEMENTS */
 	private ArrayList<Point>  lstPoint;
 	private ArrayList<Arete>  lstArete;
 	private ArrayList<Region> lstRegion;
 
+	/* DONNES JOUEUR */
 	private int               nbColorier;
 	private int               cptCouleur;
 	private int               couleurMax;
@@ -33,14 +35,14 @@ public class Graphe
 	/*Constructeur*/
 	public Graphe()
 	{
-		// initialisation des données
+		// Lecture des données
 		this.initialiser();
-		this.initialiserTour();
 
-		// Mélanger les couleurs
-		
+		//Début de partie
+		this.couleurMax      = (int) ( Math.random() * 5 ) + 15;
+		this.nbColorier      = 0;
+		this.cptCouleur      = 0;
 
-		// Test
 	}
 
 	/*Méthodes - Initialisations*/
@@ -50,8 +52,7 @@ public class Graphe
 		this.lstPoint  = new ArrayList<>();
 		this.lstArete  = new ArrayList<>();
 		this.lstRegion = new ArrayList<>();
-
-
+		
 		try
 		{
 			Scanner sc = new Scanner ( new FileInputStream ( FICHIER ), StandardCharsets.UTF_8);
@@ -121,14 +122,6 @@ public class Graphe
 		}
 	}
 
-	// Jeux
-	public void initialiserTour()
-	{
-		this.couleurMax      = (int) ( Math.random() * 5 ) + 5;
-		this.nbColorier      = 0;
-		this.cptCouleur      = 0;
-	}
-
 
 	/*Accesseurs*/
 	public Point getPoint(int id)
@@ -177,7 +170,6 @@ public class Graphe
 	public boolean colorier(int id)
 	{
 		if ( this.cptCouleur == COLORS.size()   ) return false;
-		//if (!this.estColoriable(id)) return false;
 
 		Arete a = this.lstArete.get(id);
 		Color couleur = COLORS.get( this.cptCouleur ); //Et une couleur
@@ -185,7 +177,7 @@ public class Graphe
 
 		this.nbColorier++;
 
-		if ( this.nbColorier >= this.couleurMax ) { this.cptCouleur++; this.couleurMax += (int) ( Math.random() * 5 ) + 5; }
+		if ( this.nbColorier >= this.couleurMax ) { this.cptCouleur++; this.couleurMax += (int) ( Math.random() * 5 ) + 15; }
 
 		return true;
 	}
@@ -242,8 +234,6 @@ public class Graphe
 		int y1 = a1.getPointArrivee().getY();
 		int x2 = a1.getPointDepart ().getX();
 		int y2 = a1.getPointDepart ().getY();
-
-		// boolean aPointIdentique = false;
 
 		for (Arete a2 : this.lstArete )
 		{

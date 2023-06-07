@@ -80,8 +80,8 @@ public class PanelDessin extends JPanel
 	/*Methode - dessiner*/
 	public void paintComponent(Graphics g) 
 	{
-		int hauteur = this.ctrl.getHauteurIHM() - 90;
-		int largeur = this.ctrl.getLargeurIHM() - 10;
+		int hauteur = this.ctrl.getHauteurIHM() - 20;
+		int largeur = this.ctrl.getLargeurIHM() - 170;
 
 		super.paintComponent(g);
 
@@ -126,19 +126,26 @@ public class PanelDessin extends JPanel
 			//Dessine les points
 			for (Point p : r.getPoints())
 			{
-				g2.setStroke(new BasicStroke(1f));
-				g2.setColor(r.getCouleur().getValue());
-				
-				Ellipse2D.Double circle = new Ellipse2D.Double(p.getX() * this.coef + this.margeGraphe - 6,
-						                                       p.getY() * this.coef + this.margeGraphe - 6,
-						                                       12, 12);
+				int coordX = p.getX() * this.coef - 10;
+				int coordY = p.getY() * this.coef - 10;
 
+				g2.setColor(r.getCouleur().getValue());
+				g2.setStroke(new BasicStroke(1f));
+				
+				Ellipse2D.Double circle = new Ellipse2D.Double( coordX,
+				                                                coordY,
+																20, 20);
+				
 				g2.fill(circle);
+				
+				
+				g2.setColor(Color.WHITE);
+				g2.drawString(String.format("%2d",p.getId()), coordX + 4, coordY + 15);
 
 				if (p == this.point1 || p == this.point2)
 				{
 					g2.setColor(Color.BLACK);
-					g2.setStroke(new BasicStroke(3f));
+					g2.setStroke(new BasicStroke(2f));
 					g2.draw(circle);
 				}
 			}
@@ -152,101 +159,55 @@ public class PanelDessin extends JPanel
 		}
 
 	}
-	
-	public boolean hoverShape(Point p) {
-		return this.ctrl.getSommets().stream().anyMatch(t -> {
-		    int hauteur = this.ctrl.getHauteurIHM() - 90;
-		    int largeur = this.ctrl.getLargeurIHM() - 10;
-
-		    int coef, coef1, coef2;
-
-		    coef1 = hauteur / (this.maxY);
-		    coef2 = largeur / (this.maxX);
-
-		    if (coef1 < coef2)
-			coef = coef1;
-		    else
-			coef = coef2;
-
-		    if (coef < 1)
-			coef = 1;
-
-		    int x = t.getX() * coef - 5;
-		    int y = t.getY() * coef - 5;
-
-		    return (p.getX() >= x && p.getY() >= y) && (p.getX() <= (x + 10) && p.getY() <= (y + 10));
-		});
-	    }
 
 	/*Classe GereSouris*/
 	private class GereSouris extends MouseAdapter 
 	{
-		int posX, posY;
-		Point point1, point2;
-		Controleur ctrl;
 		
-		@Override
-		public void mouseMoved(MouseEvent e) {
-		    this.ctrl = PanelDessin.this.ctrl;
-
-		    PanelDessin panel = PanelDessin.this;
-
-		    // List<Point> lstPoints = this.ctrl.getSommets();
-
-		    this.ctrl.getSommets().stream().forEach(p -> {
-			if (panel.hoverShape(new Point(-1, e.getPoint().x, e.getPoint().y)))
-			    panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			else
-			    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		    });
-
-		    if (panel.hoverShape(new Point(-1, e.getPoint().x, e.getPoint().y)))
-			panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		    else
-			panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		}
+		private Point point1;
+		private Point point2;
 		
 		public void mousePressed(MouseEvent e) 
 		{
-			this.ctrl = PanelDessin.this.ctrl; // raccourci inhumain de l'argumentation
-			try 
+			int posX, posY;
+			Controleur ctrl;
+
+			ctrl = PanelDessin.this.ctrl; // raccourci inhumain de l'argumentation
+			
+			posX = e.getX();
+			posY = e.getY();
+
+			Point p = ctrl.trouverPoint(posX * 1.0 / PanelDessin.this.coef,
+			                            posY * 1.0 / PanelDessin.this.coef);
+
+			if (p == null) 
 			{
-				this.posX = e.getX();
-				this.posY = e.getY();
-
-				Point p = this.ctrl.trouverPoint(this.posX * 1.0 / PanelDessin.this.coef,
-						this.posY * 1.0 / PanelDessin.this.coef);
-
-				if (p == null) 
-				{
-					this.point1 = this.point2 = null;
-				} 
-				else 
-				{
-					this.point2 = this.point1;
-					this.point1 = p;
-				}
-
-				if (this.point1 != null && this.point2 != null) 
-				{
-					Arete a = this.ctrl.trouverArete(this.point1, this.point2);
-
-					if (this.ctrl.estColoriable(this.ctrl.getId(a)))
-						this.ctrl.setAreteSelectionne(a.toString());
-					else
-						this.point2 = null;
-
-					/* System.out.println( this.arete.getCouleur() ); */
-				}
-
-				PanelDessin.this.repaint();
-				PanelDessin.this.point1 = this.point1;
-				PanelDessin.this.point2 = this.point2;
+				this.point1 = this.point2 = null;
 			} 
-			catch (Exception ex) 
+			else 
 			{
-				ex.printStackTrace();
+				this.point2 = this.point1;
+				this.point1 = p;
 			}
+
+			if (this.point1 != null && this.point2 != null) 
+			{
+				Arete a = ctrl.trouverArete(this.point1, this.point2);
+
+				if (ctrl.estColoriable(ctrl.getId(a)))
+				{	
+					ctrl.setAreteSelectionne(a.toString());
+				}
+				else
+				{
+					ctrl.setAreteSelectionne("");
+					this.point2 = null;
+				}
+			}
+
+			PanelDessin.this.repaint();
+			PanelDessin.this.point1 = this.point1;
+			PanelDessin.this.point2 = this.point2;
 		}
 	}
 }

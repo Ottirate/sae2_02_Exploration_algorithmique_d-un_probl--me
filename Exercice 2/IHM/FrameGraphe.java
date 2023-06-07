@@ -28,7 +28,7 @@ public class FrameGraphe extends JFrame
 
 		// Paramètre
 		this.setTitle   ("Graphe SAE 2.02");
-		this.setSize    ( (int) this.ctrl.getTailleEcran().getHeight()-200, (int) this.ctrl.getTailleEcran().getHeight() ); //1000,800
+		this.setSize    ( 800, 600 ); //1000,800
 		this.setLocationRelativeTo(null)   ;
 		
 		this.setLayout(new BorderLayout());
@@ -40,7 +40,7 @@ public class FrameGraphe extends JFrame
 		this.panelAction = new PanelAction(this.ctrl);
 
 		this.add(this.panelDessin, BorderLayout.CENTER);
-		this.add(this.panelAction, BorderLayout.SOUTH );
+		this.add(this.panelAction, BorderLayout.EAST );
 
 		this.setVisible(true);
 	}

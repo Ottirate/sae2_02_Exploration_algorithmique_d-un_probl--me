@@ -23,8 +23,9 @@ public class PanelAction extends JPanel implements ActionListener
 	/*Attributs*/
 	private Controleur ctrl;
 
-	private JLabel lblSelection;
-	private JPanel panelCouleur;
+	private JLabel    lblSelection;
+	private JTextArea txaHistorique;
+	private JPanel    panelCouleur;
 
 	private JButton btnColorier;
 
@@ -33,26 +34,39 @@ public class PanelAction extends JPanel implements ActionListener
 	{
 		// Définition du panel
 		this.ctrl = ctrl;
+		this.setBackground(new Color(180,180,255));
 		this.setLayout ( new BorderLayout(5,5) );
 
 		// Création des composants
-		JPanel panelControle = new JPanel(new GridLayout(1,3));
+		JPanel panelControle = new JPanel(new BorderLayout());
+		JPanel panelTemp     = new JPanel(new GridLayout(1,2));
 
 		this.lblSelection = new JLabel ();
 		this.panelCouleur   = new JPanel();
+		this.txaHistorique = new JTextArea();
+
 		this.panelCouleur.setBackground(this.ctrl.getColor());
 
-		this.btnColorier = new JButton("<html><u>C</u>olorier !</html>");
+		this.btnColorier = new JButton("<html> <h4> Colorier ! </h4></html>");
 		this.btnColorier.setMnemonic( KeyEvent.VK_C );
 	
 
 		// Positionnement des composants
-		panelControle.add ( this.panelCouleur );
-		panelControle.add ( new JLabel("Arête selectionné : ")   );
-		panelControle.add ( this.lblSelection );
+		panelTemp.add(new JLabel("Selectionné :"));
+		panelTemp.add(this.lblSelection);
 
-		this.add(panelControle   , BorderLayout.CENTER);
-		this.add(this.btnColorier, BorderLayout.SOUTH );
+		panelControle.add ( this.txaHistorique, BorderLayout.CENTER );
+		panelControle.add ( panelTemp         , BorderLayout.SOUTH  );
+
+
+		this.add(this.panelCouleur, BorderLayout.NORTH );
+		this.add(panelControle    , BorderLayout.CENTER);
+		this.add(this.btnColorier , BorderLayout.SOUTH );
+
+		panelControle.setOpaque(false);
+		this.txaHistorique.setOpaque(false);
+		panelTemp.setOpaque(false);
+
 
 		// Activation des composants
 		this.btnColorier.addActionListener(this);

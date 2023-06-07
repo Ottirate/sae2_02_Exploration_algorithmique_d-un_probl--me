@@ -45,19 +45,12 @@ public class Arete
 	/*Méthodes*/
 	public String toString()
 	{
-		return String.format("%s:%s", this.depart.getId(), this.arrivee.getId());
+		return String.format("%s:%s", this.arrivee.getId(), this.depart.getId());
 	}
 
 
 	public boolean pointIdentique (Arete a)
 	{
-		System.out.println (a);
-		System.out.println (a.getPointArrivee() == this.getPointArrivee() ||
-		                    a.getPointArrivee() == this.getPointDepart () ||
-		                    a.getPointDepart()  == this.getPointArrivee() ||
-		                    a.getPointDepart()  == this.getPointDepart () );
-		System.out.println();
-
 		return a.getPointArrivee() == this.getPointArrivee() ||
 		       a.getPointArrivee() == this.getPointDepart () ||
 		       a.getPointDepart()  == this.getPointArrivee() ||
