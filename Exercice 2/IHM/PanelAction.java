@@ -1,19 +1,26 @@
+/** Auteur : Equipe 1
+  * Date   : juin 2023
+*/
+
+/*Paquetage*/
 package graphe.ihm;
 
+/*Importation*/
+
+//Paquetage
+import graphe.Controleur;
+import graphe.metier.Arete;
+
+//IHM
 import javax.swing.*;
-
-import java.awt.event.*;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
-
-import graphe.Controleur;
-
-import graphe.metier.Arete;
+import java.awt.event.*;
 
 public class PanelAction extends JPanel implements ActionListener
 {
+	/*Attributs*/
 	private Controleur ctrl;
 
 	private JLabel lblSelection;
@@ -21,6 +28,7 @@ public class PanelAction extends JPanel implements ActionListener
 
 	private JButton btnColorier;
 
+	/*Constructeur*/
 	public PanelAction(Controleur ctrl)
 	{
 		// Définition du panel
@@ -34,7 +42,7 @@ public class PanelAction extends JPanel implements ActionListener
 		this.panelCouleur   = new JPanel();
 		this.panelCouleur.setBackground(this.ctrl.getColor());
 
-		this.btnColorier = new JButton("Colorier !");
+		this.btnColorier = new JButton("<html><u>C</u>olorier !</html>");
 
 		// Positionnement des composants
 		panelControle.add ( this.panelCouleur );
@@ -48,6 +56,11 @@ public class PanelAction extends JPanel implements ActionListener
 		this.btnColorier.addActionListener(this);
 	}
 
+	/*Modifieurs*/
+	public void changerCouleur      ( Color col ) { this.panelCouleur.setBackground(col); }
+	public void setAreteSelectionne (String nom)  { this.lblSelection.setText(nom)      ; }
+
+	/*Actions sur le panel*/
 	public void actionPerformed(ActionEvent e)
 	{
 		Arete a = this.ctrl.getArete(this.lblSelection.getText());
@@ -57,7 +70,4 @@ public class PanelAction extends JPanel implements ActionListener
 		this.lblSelection.setText("");
 		this.ctrl.majIhm();
 	}
-
-	public void changerCouleur ( Color col ) { this.panelCouleur.setBackground(col); }
-	public void setAreteSelectionne (String nom) { this.lblSelection.setText(nom);}
 }

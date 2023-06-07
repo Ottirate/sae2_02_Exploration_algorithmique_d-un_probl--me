@@ -1,3 +1,9 @@
+/** Auteur : Equipe 1
+  * Date   : juin 2023
+  * Info   : n'appartient pas au package
+*/
+
+/*Importations*/
 // Graphe
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.graph.Node;
@@ -12,9 +18,11 @@ import java.io.FileInputStream;
 
 public class GenererGraphe
 {
+	/*Attributs*/
 	private static final MultiGraph        graph          = new MultiGraph("Les aventuriers du rail");
 	private static final ArrayList<String> ensLienACreer  = new ArrayList<>();
 
+	/*Main*/
 	public static void main(String[] args)
 	{
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
@@ -77,6 +85,8 @@ public class GenererGraphe
 		changerCouleur();
 	}
 
+	/*Methodes*/
+	
 	public static void creerLien(String[] ensLien, Node n)
 	{
 		Integer  value   = null;

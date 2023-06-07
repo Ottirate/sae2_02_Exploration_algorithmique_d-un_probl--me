@@ -1,18 +1,30 @@
+/** Auteur : Equipe 1
+  * Date   : juin 2023
+*/
+
 package graphe.metier;
 
 import java.util.ArrayList;
 
 public class Region
 {
+	/* ATTRIBUTS DE CLASSE */
+	private static int nbCoul;
+
+	/* ATTRIBUTS */
 	private String           nom;
 	private ArrayList<Point> lstSommet;
+	private Couleur          coul;
 
+	/* CONSTRUCTEUR */
 	public Region (String nom)
 	{
-		this.nom = nom;
+		this.nom       = nom;
 		this.lstSommet = new ArrayList<Point>();
+		this.coul      = Couleur.values()[Region.nbCoul++];
 	}
 
+	/* SOMMETS */
 	public boolean ajouterSommet(Point p)
 	{
 		if (this.lstSommet.contains(p) || p == null) 
@@ -24,10 +36,12 @@ public class Region
 		return true;
 	}
 
-	//GET-TEUR
-	public Point            getPoint  (int ind) { return this.lstSommet.get(ind);}
-	public ArrayList<Point> getPoints ()        { return this.lstSommet         ;}
+	/* ACCESSEURS */
+	public Point            getPoint  (int ind) { return this.lstSommet.get(ind); }
+	public ArrayList<Point> getPoints ()        { return this.lstSommet         ; }
+	public Couleur          getCouleur()        { return this.coul              ; }
 
+	/* TO STRING */
 	public String toString ()
 	{
 		String sRep = this.nom;

@@ -1,17 +1,26 @@
+/** Auteur : Equipe 1
+  * Date   : juin 2023
+*/
+
+/*Paquetage*/
 package graphe.ihm;
 
+/*Importations*/
+//Paquetage
+import graphe.Controleur;
+
+//IHM
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 
-import graphe.Controleur;
-
 public class FrameGraphe extends JFrame
 {
+	/*Attributs*/
+	private Controleur  ctrl;
 	private PanelDessin panelDessin;
 	private PanelAction panelAction;
 
-	private Controleur  ctrl;
-
+	/*Constructeur*/
 	public FrameGraphe (Controleur ctrl)
 	{
 		this.ctrl = ctrl;
@@ -35,8 +44,16 @@ public class FrameGraphe extends JFrame
 		this.setVisible(true);
 	}
 
-	public void maj() { this.panelDessin.repaint(); }
-	public int getCoef() { return this.panelDessin.getCoef() ; }
-	public void setAreteSelectionne (String nom) {this.panelAction.setAreteSelectionne(nom);}
+	/*Acceseur*/
+	public int getCoef() { return this.panelDessin.getCoef(); }
 
+	/*Modifieur*/
+	public void setAreteSelectionne (String nom) { this.panelAction.setAreteSelectionne(nom); }
+
+	/*Méthodes*/
+	public void maj() 
+	{ 
+		this.panelDessin.repaint();
+		this.panelAction.changerCouleur(this.ctrl.getColor()); 
+	}
 }
