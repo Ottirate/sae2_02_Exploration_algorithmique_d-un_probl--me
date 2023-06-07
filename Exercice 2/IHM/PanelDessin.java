@@ -103,7 +103,7 @@ public class PanelDessin extends JPanel {
 		
 		public boolean hoverShape(Point p) {
 			return this.ctrl.getSommets().stream().anyMatch(t -> {
-				return (p.x >= t.getPointA().x && p.y >= t.getPointA().y) && (p.x <= t.getPointB().x && p.y <= t.getPointB().y);
+				return (p.x >= t.getX().x && p.y >= t.getPointA().y) && (p.x <= t.getPointB().x && p.y <= t.getPointB().y);
 			});
 		}
 
