@@ -94,10 +94,11 @@ public class Graphe
 			}
 
 			sc.nextLine(); // Saut de ligne
+			ensVal = sc.nextLine().split("\t");
 
 			// Arêtes
 			
-			while (sc.hasNextLine())
+			while (ensVal.length > 1)
 			{
 				for (int i = 0; i < ensVal.length - 1; i ++)
 				{
@@ -140,7 +141,7 @@ public class Graphe
 		return null;
 	}
 
-	public Color getColor() { return this.COLORS.get(this.cptCouleur);}
+	public Color getColor() { return this.cptCouleur == COLORS.size() ? Color.WHITE : this.COLORS.get(this.cptCouleur);}
 
 	public Color getColor(int id) { return this.lstArete.get(id).getCouleur();
 	}
@@ -175,7 +176,8 @@ public class Graphe
 
 	public boolean colorier(int id)
 	{
-		if (!this.estColoriable(id)) return false;
+		if ( this.cptCouleur == COLORS.size()   ) return false;
+		//if (!this.estColoriable(id)) return false;
 
 		Arete a = this.lstArete.get(id);
 		Color couleur = COLORS.get( this.cptCouleur ); //Et une couleur
@@ -183,14 +185,14 @@ public class Graphe
 
 		this.nbColorier++;
 
-		if ( this.nbColorier >= this.couleurMax ) { this.cptCouleur++; this.nbColorier = 0; this.couleurMax = (int) ( Math.random() * 5 ) + 5; }
-		if ( this.cptCouleur == COLORS.size()   ) this.cptCouleur = 0;
+		if ( this.nbColorier >= this.couleurMax ) { this.cptCouleur++; this.couleurMax += (int) ( Math.random() * 5 ) + 5; }
 
 		return true;
 	}
 
 	public boolean estColoriable (int id)
 	{
+		if ( this.cptCouleur == COLORS.size()   ) return false;
 		if (id < 0 || id > this.lstArete.size() ) return false;
 
 		// On récupérer l'arete
@@ -199,32 +201,24 @@ public class Graphe
 
 		// Si le trait est déja pris
 		if (a.getCouleur() != null) return false;
-		System.out.println("Pas coloré");
 
 		// Si c'est le premier trait
 		if (nbColorier == 0) return true;
-		System.out.println("Pas premier trait");
 
 		// Si l'arrete croise une arret déja colorée
 		if (this.arreteCroise(a)) return false;
-		System.out.println("Pas croisé");
 
 		// Cycle
 		if (this.aCycle(a)) return false;
-		System.out.println("Pas cycle");
 
 		// Si il a une arete autour d'elle coloriée
 		for (Arete arete : a.getPointDepart().getAretesAdjacentes())
-			if (couleur.equals( arete.getCouleur() )) return true;
+			if (arete.getCouleur() != null) return true;
 		
-		System.out.println("Pas de point colorié début");
 
 		for (Arete arete : a.getPointArrivee().getAretesAdjacentes())
-			if (couleur.equals( arete.getCouleur() )) return true;
+			if (arete.getCouleur() != null) return true;
 
-
-
-		System.out.println("Cest NON");
 		return false;
 	}
 
@@ -255,6 +249,7 @@ public class Graphe
 		{
 			if (a2.getCouleur() != null && !a1.pointIdentique(a2))
 			{
+
 				int x3 = a2.getPointArrivee().getX();
 				int y3 = a2.getPointArrivee().getY();
 				int x4 = a2.getPointDepart ().getX();
@@ -277,20 +272,6 @@ public class Graphe
 
 		for (Point p : this.lstPoint)
 		{
-			/*Double d = Math.sqrt( (p.getX() - x) * (p.getX() - x) + (p.getY() - y) * (p.getY() - y) );
-
-			if (distance == null)
-			{
-				distance = d;
-				point = p;
-			}
-
-			if ( ( point == null || distance >= d ) && distance <= 5 )
-			{
-				point    = p;
-				distance = d;
-			}*/
-
 			distance = Math.pow((x - p.getX()) / (double) 5.0, 2) + Math.pow((y - p.getY()) / (double) 5.0, 2);
 
 			if (distance <= 1.0) return p;

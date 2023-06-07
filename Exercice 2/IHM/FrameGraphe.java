@@ -12,8 +12,9 @@ import graphe.Controleur;
 //IHM
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.event.*;
 
-public class FrameGraphe extends JFrame
+public class FrameGraphe extends JFrame 
 {
 	/*Attributs*/
 	private Controleur  ctrl;

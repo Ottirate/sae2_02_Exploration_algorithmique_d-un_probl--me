@@ -100,12 +100,19 @@ public class PanelDessin extends JPanel
 		if (this.coef < 1)
 			this.coef = 1;
 
+		//Dessine les arêtes - On commence par les aretes pour ne pas superposer les aretes et les noeud
 		for (Arete a : this.ctrl.getAretes()) 
 		{
 			if (a.getCouleur() != null)
+			{
 				g2.setColor(a.getCouleur());
+				g2.setStroke(new BasicStroke(2f));
+			}
 			else
+			{
+				g2.setStroke(new BasicStroke(1f));
 				g2.setColor(Color.GRAY);
+			}
 
 			Point p1 = a.getPointDepart();
 			Point p2 = a.getPointArrivee();
@@ -113,16 +120,18 @@ public class PanelDessin extends JPanel
 					    (p2.getX() * this.coef) , (p2.getY() * this.coef) );
 		}
 
+		//Dessine les régions
 		for (Region r : this.ctrl.getRegions())
 		{
+			//Dessine les points
 			for (Point p : r.getPoints())
 			{
 				g2.setStroke(new BasicStroke(1f));
 				g2.setColor(r.getCouleur().getValue());
 				
-				Ellipse2D.Double circle = new Ellipse2D.Double(p.getX() * this.coef + this.margeGraphe - 5,
-						                                       p.getY() * this.coef + this.margeGraphe - 5,
-						                                       10, 10);
+				Ellipse2D.Double circle = new Ellipse2D.Double(p.getX() * this.coef + this.margeGraphe - 6,
+						                                       p.getY() * this.coef + this.margeGraphe - 6,
+						                                       12, 12);
 
 				g2.fill(circle);
 
@@ -133,6 +142,13 @@ public class PanelDessin extends JPanel
 					g2.draw(circle);
 				}
 			}
+		}
+
+		//Dessine un message de fin
+		boolean estFini = false; //mettre un accesseur sur le controleur
+		if( estFini )
+		{
+			
 		}
 
 	}

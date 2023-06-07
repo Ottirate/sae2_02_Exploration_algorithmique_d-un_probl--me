@@ -43,6 +43,8 @@ public class PanelAction extends JPanel implements ActionListener
 		this.panelCouleur.setBackground(this.ctrl.getColor());
 
 		this.btnColorier = new JButton("<html><u>C</u>olorier !</html>");
+		this.btnColorier.setMnemonic( KeyEvent.VK_C );
+	
 
 		// Positionnement des composants
 		panelControle.add ( this.panelCouleur );
@@ -62,6 +64,11 @@ public class PanelAction extends JPanel implements ActionListener
 
 	/*Actions sur le panel*/
 	public void actionPerformed(ActionEvent e)
+	{
+		this.colorier();
+	}
+
+	public void colorier()
 	{
 		Arete a = this.ctrl.getArete(this.lblSelection.getText());
 
