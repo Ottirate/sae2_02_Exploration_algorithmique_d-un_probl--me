@@ -100,6 +100,12 @@ public class PanelDessin extends JPanel {
 					10, 10);
 			g2.fill(circle);
 		}
+		
+		public boolean hoverShape(Point p) {
+			return this.ctrl.getSommets().stream().anyMatch(t -> {
+				return (p.x >= t.getPointA().x && p.y >= t.getPointA().y) && (p.x <= t.getPointB().x && p.y <= t.getPointB().y);
+			});
+		}
 
 	}
 
@@ -108,6 +114,27 @@ public class PanelDessin extends JPanel {
 		int posX, posY;
 		Point point1, point2;
 		Controleur ctrl;
+		
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			this.ctrl = PanelDessin.this.ctrl;
+			
+			PanelDessin panel = PanelDessin.this;
+			
+			// List<Point> lstPoints = this.ctrl.getSommets();
+			
+			this.ctrl.getSommets().stream().forEach(p -> {
+				if (this.panel.hoverShape(e.getPoint()))
+					this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				else
+					this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			});
+			
+			if (this.panel.hoverShape(e.getPoint()))
+				this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			else
+				this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
 
 		public void mousePressed(MouseEvent e) 
 		{
