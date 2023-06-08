@@ -10,10 +10,12 @@ package graphe;
 
 /*       Imports       */
 import graphe.ihm.FrameGraphe;
+import graphe.ihm.PopupFin;
 import graphe.metier.*;
 
 import java.awt.Color;
 import javax.swing.SwingUtilities;
+import javax.swing.JOptionPane;
 
 import java.util.ArrayList;
 
@@ -70,7 +72,18 @@ public class Controleur
 	/* ------------------- */
 
 	/*         IHM         */
-	public void majIhm () { this.ihm.maj(); }
+	public void majIhm ()   { this.ihm.maj(); }
+	public void finPartie()
+	{
+		int valeur = ((Integer)JOptionPane.showConfirmDialog( this.ihm, "Voulez vous rejouer ?", "Fin de la partie", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE));
+		if( valeur == JOptionPane.YES_OPTION ) 
+		{
+			this.metier.initialiser( "./Graphe.data" );
+			this.ihm.maj();
+		}
+		else
+			this.ihm.dispose();
+	}
 
 
 	/*      Lancement      */

@@ -10,6 +10,9 @@ package graphe.metier;
 
 /*       Imports       */
 import java.util.*;
+
+import graphe.metier.Region;
+
 import java.nio.charset.StandardCharsets;
 import java.io.FileInputStream;
 import java.awt.Color;
@@ -18,9 +21,11 @@ import java.awt.geom.Line2D;
 
 public class Graphe
 {
+	private final static int NB_TOUR_MIN = 5;
+
 	/* Attributs Constants */
-	private final String            FICHIER = "./Graphe.data";
-	private final ArrayList<Color>  COLORS  = new ArrayList<>(Arrays.asList(
+	private static final String            FICHIER = "./Graphe.data";
+	private static final ArrayList<Color>  COLORS  = new ArrayList<>(Arrays.asList(
 		Color.RED,
 		Color.BLUE
 	));
@@ -38,14 +43,8 @@ public class Graphe
 	/*    Constructeur     */
 	public Graphe()
 	{
-		// Lecture des données
-		this.initialiser();
-
-		//Début de partie
-		this.couleurMax = (int) ( Math.random() * 5 ) + 15;
-		this.nbColorier = 0;
-		this.cptCouleur = 0;
-
+		//initialisation de la partie
+		this.initialiser( Graphe.FICHIER );
 	}
 
 
@@ -59,7 +58,7 @@ public class Graphe
 
 
 	public Color getColor() {
-		return this.cptCouleur == COLORS.size() ? Color.WHITE : this.COLORS.get(this.cptCouleur);
+		return this.cptCouleur == COLORS.size() ? Color.LIGHT_GRAY : this.COLORS.get(this.cptCouleur);
 	}
 
 
@@ -104,17 +103,21 @@ public class Graphe
 
 
 	/*      Méthodes       */
-	private void initialiser()
+	public void initialiser( String nomFic )
 	{
 		// Création des listes
 		this.lstPoint  = new ArrayList<>();
 		this.lstArete  = new ArrayList<>();
 		this.lstRegion = new ArrayList<>();
 
+		//Reset le nombre de region à 0 pour les coul
+		Region.reset();
 
+		// Lecture des données
 		try
 		{
-			Scanner sc = new Scanner ( new FileInputStream ( FICHIER ), StandardCharsets.UTF_8);
+			Scanner sc = new Scanner ( new FileInputStream ( nomFic ), StandardCharsets.UTF_8);
+			System.out.println("Pas prob fic");
 
 			sc.nextLine(); // Saut de ligne
 
@@ -139,6 +142,7 @@ public class Graphe
 			sc.nextLine(); // Saut de ligne
 			ensVal = sc.nextLine().split("\t");
 
+			System.out.println("Pas prob Point");
 
 			// Régions
 			Region region;
@@ -157,8 +161,9 @@ public class Graphe
 
 			sc.nextLine(); // Saut de ligne
 			ensVal = sc.nextLine().split("\t");
+			System.out.println("Pas prob Reg");
 
-
+			
 			// Arêtes
 			while (ensVal.length > 1)
 			{
@@ -174,6 +179,8 @@ public class Graphe
 			
 				ensVal = sc.nextLine().split("\t");
 			}
+			System.out.println("Pas prob arete");
+
 
 			sc.close();
 		}
@@ -181,6 +188,11 @@ public class Graphe
 		{
 			System.out.println("Il semblerait qu'il y ait un problème de fichier");
 		}
+
+		//initialialisation des valeurs
+		this.couleurMax = (int) ( Math.random() * 5 ) + Graphe.NB_TOUR_MIN;
+		this.nbColorier = 0;
+		this.cptCouleur = 0;
 	}
 
 
@@ -194,7 +206,7 @@ public class Graphe
 
 		this.nbColorier++;
 
-		if ( this.nbColorier >= this.couleurMax ) { this.cptCouleur++; this.couleurMax += (int) ( Math.random() * 5 ) + 15; }
+		if ( this.nbColorier >= this.couleurMax ) { this.cptCouleur++; this.couleurMax += (int) ( Math.random() * 5 ) + Graphe.NB_TOUR_MIN; }
 	}
 
 

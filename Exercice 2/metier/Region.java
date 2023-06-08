@@ -11,6 +11,8 @@ package graphe.metier;
 /*       Imports       */
 import java.util.ArrayList;
 
+import graphe.metier.Couleur;
+
 
 public class Region
 {
@@ -30,6 +32,9 @@ public class Region
 		this.nom       = nom;
 		this.lstSommet = new ArrayList<>();
 		this.coul      = Couleur.values()[Region.nbCoul++];
+
+		if (Region.nbCoul >= Couleur.values().length)
+			Region.nbCoul = 0;
 	}
 
 
@@ -47,6 +52,7 @@ public class Region
 		this.lstSommet.add(p);
 	}
 
+	public static void reset() { Region.nbCoul = 0;}
 
 	public String toString ()
 	{

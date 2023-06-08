@@ -1,6 +1,7 @@
-./IHM/FrameGraphe.java
-./IHM/PanelAction.java
-./IHM/PanelDessin.java
+./ihm/FrameGraphe.java
+./ihm/PanelAction.java
+./ihm/PanelDessin.java
+./ihm/PopupFin.java
 
 ./metier/Arete.java
 ./metier/Couleur.java

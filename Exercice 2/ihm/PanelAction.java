@@ -13,6 +13,8 @@ import graphe.Controleur;
 import graphe.metier.Arete;
 
 import javax.swing.*;
+//import javax.swing.border.EmptyBorder;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
@@ -37,37 +39,41 @@ public class PanelAction extends JPanel implements ActionListener
 		/*     Paramétrage     */
 		this.ctrl = ctrl;
 
-		this.setBackground(new Color(180,180,255));
+		this.setBackground(Color.LIGHT_GRAY);
 		this.setLayout ( new BorderLayout(5,5) );
 
 
 		/*      Créations      */
 		JPanel panelControle = new JPanel(new BorderLayout());
-		panelControle.setOpaque(false);
-
 		JPanel panelTemp     = new JPanel(new GridLayout(1,2));
-		panelTemp.setOpaque(false);
+		JPanel panelTemp2    = new JPanel(new GridLayout(5,1));
+		
+		panelControle.setOpaque(false);
+		panelTemp    .setOpaque(false);
+		panelTemp2   .setOpaque(false);
 
 		this.lblSelection = new JLabel ();
-		this.panelCouleur   = new JPanel();
-
-		this.txaHistorique = new JTextArea();
-		this.txaHistorique.setOpaque(false);
+		this.panelCouleur = new JPanel();
+		this.btnColorier  = new JButton("<html><h4> <u>C</u>olorier !</h4></html>");
 
 		this.panelCouleur.setBackground(this.ctrl.getColor());
-
-		this.btnColorier = new JButton("<html><h4> Colorier !</h4></html>");
 		this.btnColorier.setMnemonic( KeyEvent.VK_C );
+
+		//Ne fonctionne pas
+		//this.setLayout( new BorderLayout() );
+		//this.panelCouleur.setBorder(new EmptyBorder(50,50,50,50));
 
 
 		/*   Positionnement    */
-		panelTemp.add(new JLabel("Selectionné :"));
+		panelTemp.add(new JLabel("Selectionné : "));
 		panelTemp.add(this.lblSelection);
 
-		panelControle.add ( this.txaHistorique, BorderLayout.CENTER );
+		panelTemp2.add(this.panelCouleur);
+		panelTemp2.add(panelTemp        );
+
+		panelControle.add ( panelTemp2        , BorderLayout.CENTER );
 		panelControle.add ( panelTemp         , BorderLayout.SOUTH  );
 
-		this.add(this.panelCouleur, BorderLayout.NORTH );
 		this.add(this.btnColorier , BorderLayout.SOUTH );
 		this.add(panelControle    , BorderLayout.CENTER);
 
@@ -78,7 +84,12 @@ public class PanelAction extends JPanel implements ActionListener
 
 
 	/*     Modifieurs      */
-	public void changerCouleur      ( Color col ) { this.panelCouleur.setBackground(col); }
+	public void changerCouleur      ( Color col ) 
+	{ 
+		this.panelCouleur.setBackground(col);
+		if (col == Color.LIGHT_GRAY)
+			this.ctrl.finPartie();
+	}
 	public void setAreteSelectionne (String nom)  { this.lblSelection.setText(nom)      ; }
 
 

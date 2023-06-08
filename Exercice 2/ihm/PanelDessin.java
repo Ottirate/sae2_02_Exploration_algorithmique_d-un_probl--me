@@ -72,8 +72,8 @@ public class PanelDessin extends JPanel
 	/*      Méthodes       */
 	public void paintComponent(Graphics g) 
 	{
-		int hauteur = this.ctrl.getHauteurIHM() - 20 ;
-		int largeur = this.ctrl.getLargeurIHM() - 170;
+		int hauteur = this.ctrl.getHauteurIHM() - 50 ;
+		int largeur = this.ctrl.getLargeurIHM() - 180;
 
 		super.paintComponent(g);
 
@@ -108,7 +108,7 @@ public class PanelDessin extends JPanel
 					    (p2.getX() * this.coef) , (p2.getY() * this.coef) );
 		}
 
-		//Dessine les régions
+		//Dessine les régions et leur points
 		for (Region r : this.ctrl.getRegions())
 		{
 			//Dessine les points
@@ -145,30 +145,31 @@ public class PanelDessin extends JPanel
 
 	}
 	
-	public boolean hoverShape(Point p) {
-		return this.ctrl.getSommets().stream().anyMatch(t -> {
-		    int hauteur = this.ctrl.getHauteurIHM() - 90;
-		    int largeur = this.ctrl.getLargeurIHM() - 10;
+	//Ca marche pas + c'est lourd 
+	// public boolean hoverShape(Point p) {
+	// 	return this.ctrl.getSommets().stream().anyMatch(t -> {
+	// 	    int hauteur = this.ctrl.getHauteurIHM() - 90;
+	// 	    int largeur = this.ctrl.getLargeurIHM() - 10;
 
-		    int coef, coef1, coef2;
+	// 	    int coef, coef1, coef2;
 
-		    coef1 = hauteur / (this.maxY);
-		    coef2 = largeur / (this.maxX);
+	// 	    coef1 = hauteur / (this.maxY);
+	// 	    coef2 = largeur / (this.maxX);
 
-		    if (coef1 < coef2)
-			coef = coef1;
-		    else
-			coef = coef2;
+	// 	    if (coef1 < coef2)
+	// 		coef = coef1;
+	// 	    else
+	// 		coef = coef2;
 
-		    if (coef < 1)
-			coef = 1;
+	// 	    if (coef < 1)
+	// 		coef = 1;
 
-		    int x = t.getX() * coef - 5;
-		    int y = t.getY() * coef - 5;
+	// 	    int x = t.getX() * coef - 5;
+	// 	    int y = t.getY() * coef - 5;
 
-		    return (p.getX() >= x && p.getY() >= y) && (p.getX() <= (x + 10) && p.getY() <= (y + 10));
-		});
-	    }
+	// 	    return (p.getX() >= x && p.getY() >= y) && (p.getX() <= (x + 10) && p.getY() <= (y + 10));
+	// 	});
+	//     }
 
 	/*       Classe        */
 	/*     GereSouris      */
@@ -179,19 +180,19 @@ public class PanelDessin extends JPanel
 		private Point point2;
 		
 		/*      Méthodes       */
-		@Override
-		public void mouseMoved(MouseEvent e) {
-		    this.ctrl = PanelDessin.this.ctrl;
+		// Même truc : lourd + inutile
+		// public void mouseMoved(MouseEvent e) {
+		//     this.ctrl = PanelDessin.this.ctrl;
 
-		    PanelDessin panel = PanelDessin.this;
+		//     PanelDessin panel = PanelDessin.this;
 
-		    this.ctrl.getSommets().stream().forEach(p -> {
-			if (panel.hoverShape(new Point(-1, e.getPoint().x, e.getPoint().y)))
-			    panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			else
-			    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		    });
-		}
+		//     this.ctrl.getSommets().stream().forEach(p -> {
+		// 	if (panel.hoverShape(new Point(-1, e.getPoint().x, e.getPoint().y)))
+		// 	    panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		// 	else
+		// 	    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		//     });
+		// }
 		
 		public void mousePressed(MouseEvent e) 
 		{
@@ -229,6 +230,10 @@ public class PanelDessin extends JPanel
 					ctrl.setAreteSelectionne("");
 					this.point2 = null;
 				}
+			}
+			else
+			{
+				ctrl.setAreteSelectionne("");
 			}
 
 			PanelDessin.this.repaint();

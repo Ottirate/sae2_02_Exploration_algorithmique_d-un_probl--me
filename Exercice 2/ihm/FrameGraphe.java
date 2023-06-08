@@ -13,6 +13,7 @@ import graphe.Controleur;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 
 public class FrameGraphe extends JFrame 
@@ -32,9 +33,11 @@ public class FrameGraphe extends JFrame
 
 		/*     Paramétrage     */
 		this.setTitle   ("Graphe SAE 2.02");
-		this.setSize    ( 800, 600 ); //1000,800
+		this.setSize    ( 700, 600 ); //800,600
 		this.setLocationRelativeTo(null)   ;
 		
+		this.setMinimumSize(new Dimension(500, 380));
+
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
