@@ -26,7 +26,7 @@ public class Graphe
 
 
 	/* Attributs Constants */
-	private static final String FICHIER = "./Graphe.data";
+	private static final String FICHIER = "../Graphe.data";
 
 	private static final ArrayList<Color> COLORS = new ArrayList<>(Arrays.asList(
 		Color.RED,
