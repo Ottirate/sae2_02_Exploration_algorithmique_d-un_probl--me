@@ -11,16 +11,14 @@ package graphe.ihm;
 /*       Imports       */
 import graphe.Controleur;
 import graphe.metier.*;
+import graphe.metier.Point;
 
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.*;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.BasicStroke;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 
 
 public class PanelDessin extends JPanel
@@ -118,10 +116,20 @@ public class PanelDessin extends JPanel
 		}
 
 
-		//Dessine les régions et leur points
+		// Dessine les régions et leur point
 		for (Region r : this.ctrl.getRegions())
 		{
-			//Dessine les points
+			// Régions
+			Polygon poly = new Polygon();
+
+			this.trierPointsPolygone(r.getPoints(), poly);
+
+			Color c = r.getCouleur().getValue();
+
+			g2.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 50));
+			g2.fill(poly);
+
+			// Dessine les points
 			for (Point p : r.getPoints())
 			{
 				int coordX = p.getX() * this.coef - 10;
@@ -145,15 +153,64 @@ public class PanelDessin extends JPanel
 				}
 			}
 		}
+	}
 
 
-		//Dessine un message de fin
-		boolean estFini = false; //mettre un accesseur sur le controleur
-		if( estFini )
+	public void trierPointsPolygone(ArrayList<Point> points, Polygon poly)
+	{
+		int n = points.size();
+		if (n < 3)
 		{
+			for ( Point p : points ) poly.addPoint( p.getX() * this.coef, p.getY() * this.coef );
 
+			return;
 		}
 
+		ArrayList<Point> polygoneTri = new ArrayList<>();
+
+		// Trouver le point le plus à gauche
+		int pointGaucheIndex = 0;
+		for (int i = 1; i < n; i++)
+		{
+			if ( points.get(i).getX() < points.get(pointGaucheIndex).getX() )
+			{
+				pointGaucheIndex = i;
+			}
+		}
+
+		int pointCourantIndex = pointGaucheIndex;
+		int pointSuivantIndex;
+
+		do
+		{
+			polygoneTri.add( points.get(pointCourantIndex) );
+			pointSuivantIndex = (pointCourantIndex + 1) % n;
+
+			for ( int i = 0; i < n; i++ )
+			{
+				// Vérifier si le point i est plus à gauche que le pointSuivant
+				if ( orientation(points.get(pointCourantIndex), points.get(i), points.get(pointSuivantIndex)) == 2 )
+				{
+					pointSuivantIndex = i;
+				}
+			}
+
+			pointCourantIndex = pointSuivantIndex;
+
+		}
+		while ( pointCourantIndex != pointGaucheIndex );
+
+		for ( Point p : polygoneTri ) poly.addPoint(p.getX() * this.coef, p.getY() * this.coef);
+	}
+
+
+	private static int orientation(Point p, Point q, Point r)
+	{
+		int val = (q.getY() - p.getY()) * (r.getX() - q.getX()) - (q.getX() - p.getX()) * (r.getY() - q.getY());
+
+		if (val == 0) return 0;  // Les points sont colinéaires
+
+		return (val > 0) ? 1 : 2; // 1 pour sens horaire, 2 pour sens anti-horaire
 	}
 
 
