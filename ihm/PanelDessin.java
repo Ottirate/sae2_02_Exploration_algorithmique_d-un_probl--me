@@ -144,6 +144,31 @@ public class PanelDessin extends JPanel
 		}
 
 	}
+	
+	public boolean hoverShape(Point p) {
+		return this.ctrl.getSommets().stream().anyMatch(t -> {
+		    int hauteur = this.ctrl.getHauteurIHM() - 90;
+		    int largeur = this.ctrl.getLargeurIHM() - 10;
+
+		    int coef, coef1, coef2;
+
+		    coef1 = hauteur / (this.maxY);
+		    coef2 = largeur / (this.maxX);
+
+		    if (coef1 < coef2)
+			coef = coef1;
+		    else
+			coef = coef2;
+
+		    if (coef < 1)
+			coef = 1;
+
+		    int x = t.getX() * coef - 5;
+		    int y = t.getY() * coef - 5;
+
+		    return (p.getX() >= x && p.getY() >= y) && (p.getX() <= (x + 10) && p.getY() <= (y + 10));
+		});
+	    }
 
 	/*       Classe        */
 	/*     GereSouris      */
@@ -152,9 +177,22 @@ public class PanelDessin extends JPanel
 		/*      Attributs      */
 		private Point point1;
 		private Point point2;
-
-
+		
 		/*      Méthodes       */
+		@Override
+		public void mouseMoved(MouseEvent e) {
+		    this.ctrl = PanelDessin.this.ctrl;
+
+		    PanelDessin panel = PanelDessin.this;
+
+		    this.ctrl.getSommets().stream().forEach(p -> {
+			if (panel.hoverShape(new Point(-1, e.getPoint().x, e.getPoint().y)))
+			    panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			else
+			    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		    });
+		}
+		
 		public void mousePressed(MouseEvent e) 
 		{
 			int posX, posY;
