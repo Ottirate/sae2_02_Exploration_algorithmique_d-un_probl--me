@@ -20,7 +20,7 @@ public class Graphe
 	private final static int NB_TOUR_MIN = 5;
 
 	/* Attributs Constants */
-	private static final String FICHIER = "./Graphe.data";
+	private static final String FICHIER = "../Graphe.data";
 	private static final ArrayList<Color> COLORS = new ArrayList<>(Arrays.asList(
 			Color.RED,
 			Color.BLUE));
@@ -39,7 +39,7 @@ public class Graphe
 	public Graphe() 
 	{
 		// initialisation de la partie
-		this.initialiser(Graphe.FICHIER);
+		this.initialiser();
 	}
 
 	/* Accesseurs */
@@ -80,7 +80,7 @@ public class Graphe
 		return null;
 	}
 
-	public Arete trouverArete(Point a, Point b) 
+	public Arete trouverArete(Point a, Point b)
 	{
 		for (Arete areteA : a.getAretesAdjacentes())
 			for (Arete areteB : b.getAretesAdjacentes())
@@ -105,7 +105,7 @@ public class Graphe
 	}
 
 	/* Méthodes */
-	public void initialiser(String nomFic) 
+	public void initialiser() 
 	{
 		// Création des listes
 		this.lstPoint = new ArrayList<>();
@@ -117,7 +117,7 @@ public class Graphe
 
 		// Lecture des données
 		try {
-			Scanner sc = new Scanner(new FileInputStream(nomFic), StandardCharsets.UTF_8);
+			Scanner sc = new Scanner(new FileInputStream( Graphe.FICHIER ), StandardCharsets.UTF_8);
 			System.out.println("Pas prob fic");
 
 			sc.nextLine(); // Saut de ligne
@@ -173,7 +173,23 @@ public class Graphe
 
 				ensVal = sc.nextLine().split("\t");
 			}
+			
+			sc.nextLine(); // Saut de ligne
+			ensVal = sc.nextLine().split("\t");
 			System.out.println("Pas prob arete");
+			
+			// Bonus
+			Point p1, p2;
+			while (sc.hasNextLine())
+			{
+				p1 = this.getPoint(Integer.parseInt(ensVal[0]));
+				p2 = this.getPoint(Integer.parseInt(ensVal[1]));
+				this.trouverArete(p1, p2).setCout(Integer.parseInt(ensVal[2]));
+
+				ensVal = sc.nextLine().split("\t");
+			}
+
+			System.out.println(this.trouverArete(this.getPoint(30), this.getPoint(33)).getCout());
 
 			sc.close();
 		} catch (Exception e) {
@@ -209,23 +225,49 @@ public class Graphe
 
 	public int nbPoint() 
 	{
+		int nbPointRegion, nbPointRegionMax;
+		int nbRegionVue = 0;
+
 		int nbPoints = 0;
-		Region r;
-		ArrayList<Region> lstRegVue = new ArrayList<Region>();
+		
+		Point p;
+		ArrayList<Point> lstPointVue = new ArrayList<Point>();
 
-		for (Arete a : this.lstAreteColore)
+		//On regarde le nombre max de ville visité par région :
+
+		//Pour chaque region
+		nbPointRegionMax = 0;
+		for (Region r : this.lstRegion)
 		{
-			nbPoints += a.getCout();
+			lstPointVue = new ArrayList<Point>();
 
-			r = a.getPointArrivee().getRegion();
-			if (r != null && !lstRegVue.contains(r)) lstRegVue.add(r);
+			//On regarde les aretes
+			for (Arete a : this.lstAreteColore)
+			{
+				p = a.getPointArrivee();
+				if (p.getRegion() == r && !lstPointVue.contains(p))
+					lstPointVue.add(p);
 
-			r = a.getPointDepart().getRegion();
-			if (r != null && !lstRegVue.contains(r)) lstRegVue.add(r);
+				p = a.getPointDepart();
+				if (p.getRegion() == r && !lstPointVue.contains(p))
+					lstPointVue.add(p);
+			}
 
+			nbPointRegion = lstPointVue.size();
+
+			if (nbPointRegion > 0) nbRegionVue++;
+
+			//Si il y a plus de 
+			if (nbPointRegion > nbPointRegionMax) nbPointRegionMax = nbPointRegion;
 		}
 
-		return nbPoints + lstRegVue.size();
+
+		//Calcul du bonus 
+		for (Arete a : this.lstAreteColore)
+			nbPoints += a.getCout();
+			
+
+		return nbPointRegionMax * nbRegionVue + nbPoints;
 	}
 
 	public boolean estColoriable(Arete a) 
@@ -248,7 +290,7 @@ public class Graphe
 			return false;
 
 		// Cycle
-		if (this.aCycle(a))
+		if ( this.aCycle( a.getPointDepart(), a.getPointArrivee(), a.getPointArrivee(), COLORS.get( this.cptCouleur ) ) )
 			return false;
 
 		// S'il a une arête autour d'elle coloriée
@@ -263,16 +305,26 @@ public class Graphe
 		return false;
 	}
 
-	private boolean aCycle(Arete a1)
-	{ 
-		Color c = COLORS.get( this.cptCouleur );
-	
-		for (Arete a : a1.getPointDepart().getAretesAdjacentes())
-				if ( c.equals(a.getCouleur()) )
-			for (Arete a2 : a1.getPointArrivee().getAretesAdjacentes())
-				if ( c.equals(a2.getCouleur()) ) return true;
+	private boolean aCycle(Point p1, Point p1dAvant, Point p2, Color c)
+	{
+		for (Arete a : p1.getAretesAdjacentes())
+		{
+			Point p = a.getPointArrivee() == p1 ? a.getPointDepart() : a.getPointArrivee();
 
-						
+			if ( c.equals(a.getCouleur()) && p != p1dAvant )
+			{
+				if ( p != p2 )
+				{
+					//return this.checkSuite(p, p1, p2, c);
+					if (this.aCycle(p, p1, p2, c)) return true;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
 		return false;
 	}
 

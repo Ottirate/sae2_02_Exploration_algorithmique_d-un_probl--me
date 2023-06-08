@@ -73,7 +73,7 @@ public class PanelDessin extends JPanel
 	public void paintComponent(Graphics g) 
 	{
 		int hauteur = this.ctrl.getHauteurIHM() - 50 ;
-		int largeur = this.ctrl.getLargeurIHM() - 180;
+		int largeur = this.ctrl.getLargeurIHM() - 200;
 
 		super.paintComponent(g);
 
@@ -98,14 +98,24 @@ public class PanelDessin extends JPanel
 			}
 			else
 			{
-				g2.setStroke(new BasicStroke(1f));
+				if (a.getCout() > 0)
+					g2.setStroke(new BasicStroke(2f));
+				else
+					g2.setStroke(new BasicStroke(1f));
 				g2.setColor(Color.GRAY);
 			}
 
 			Point p1 = a.getPointDepart();
 			Point p2 = a.getPointArrivee();
-			g2.drawLine((p1.getX() * this.coef) , (p1.getY() * this.coef) ,
-					    (p2.getX() * this.coef) , (p2.getY() * this.coef) );
+
+			int x1 = p1.getX() * this.coef ;
+			int y1 = p1.getY() * this.coef ;
+			int x2 = p2.getX() * this.coef ;
+			int y2 = p2.getY() * this.coef ;
+
+			g2.drawLine( x1, y1, x2, y2 );
+			
+			//if (a.getCout() > 0) g2.drawString(a.getCout() + "", (x1 + x2)/2 + 5,(y1 + y2)/2 - 5);
 		}
 
 		//Dessine les régions et leur points

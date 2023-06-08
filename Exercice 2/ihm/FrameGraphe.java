@@ -32,11 +32,13 @@ public class FrameGraphe extends JFrame
 
 
 		/*     Paramétrage     */
+		Dimension d = new Dimension(645, 485);
+		//Taille opti
+		this.setSize       (d); 
+		this.setMinimumSize(d);
+
 		this.setTitle   ("Graphe SAE 2.02");
-		this.setSize    ( 700, 600 ); //800,600
 		this.setLocationRelativeTo(null)   ;
-		
-		this.setMinimumSize(new Dimension(500, 380));
 
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -26,7 +26,7 @@ public class Arete
 	{
 		this.depart  = depart;
 		this.arrivee = arrivee;
-		this.cout    = 1;
+		this.cout    = 0;
 
 		this.depart .ajouterArete(this);
 		this.arrivee.ajouterArete(this);
