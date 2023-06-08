@@ -52,7 +52,7 @@ public class Region
 		this.lstSommet.add(p);
 	}
 
-	public static void reset() { Region.nbCoul = 0;}
+	public static void reset() { Region.nbCoul = 0; }
 
 	public String toString ()
 	{

@@ -13,7 +13,6 @@ import graphe.Controleur;
 import graphe.metier.Arete;
 
 import javax.swing.*;
-//import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -27,7 +26,6 @@ public class PanelAction extends JPanel implements ActionListener
 	private Controleur ctrl;
 
 	private JLabel    lblSelection;
-	private JTextArea txaHistorique;
 	private JPanel    panelCouleur;
 
 	private JButton btnColorier;
@@ -58,10 +56,6 @@ public class PanelAction extends JPanel implements ActionListener
 
 		this.panelCouleur.setBackground(this.ctrl.getColor());
 		this.btnColorier.setMnemonic( KeyEvent.VK_C );
-
-		//Ne fonctionne pas
-		//this.setLayout( new BorderLayout() );
-		//this.panelCouleur.setBorder(new EmptyBorder(50,50,50,50));
 
 
 		/*   Positionnement    */

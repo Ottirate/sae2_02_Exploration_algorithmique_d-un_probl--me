@@ -38,7 +38,7 @@ public class PanelDessin extends JPanel
 
 
 	/*    Constructeur     */
-	public PanelDessin(Controleur ctrl) 
+	public PanelDessin(Controleur ctrl)
 	{
 		/*      Attributs      */
 		this.ctrl = ctrl;
@@ -59,7 +59,7 @@ public class PanelDessin extends JPanel
 		this.maxX = 0;
 		this.maxY = 0;
 
-		for (Point p : this.ctrl.getSommets()) 
+		for (Point p : this.ctrl.getSommets())
 		{
 			if ( p.getX() > this.maxX )
 				this.maxX = p.getX() + 1; // pour éviter le /0
@@ -70,7 +70,7 @@ public class PanelDessin extends JPanel
 
 
 	/*      Méthodes       */
-	public void paintComponent(Graphics g) 
+	public void paintComponent(Graphics g)
 	{
 		int hauteur = this.ctrl.getHauteurIHM() - 50 ;
 		int largeur = this.ctrl.getLargeurIHM() - 200;
@@ -88,8 +88,9 @@ public class PanelDessin extends JPanel
 
 		if ( this.coef < 1 ) this.coef = 1;
 
+
 		//Dessine les arêtes - On commence par les arêtes pour ne pas superposer les arêtes et les nœuds
-		for (Arete a : this.ctrl.getAretes()) 
+		for (Arete a : this.ctrl.getAretes())
 		{
 			if ( a.getCouleur() != null )
 			{
@@ -114,9 +115,8 @@ public class PanelDessin extends JPanel
 			int y2 = p2.getY() * this.coef ;
 
 			g2.drawLine( x1, y1, x2, y2 );
-			
-			//if (a.getCout() > 0) g2.drawString(a.getCout() + "", (x1 + x2)/2 + 5,(y1 + y2)/2 - 5);
 		}
+
 
 		//Dessine les régions et leur points
 		for (Region r : this.ctrl.getRegions())
@@ -129,9 +129,9 @@ public class PanelDessin extends JPanel
 
 				g2.setColor(r.getCouleur().getValue());
 				g2.setStroke(new BasicStroke(1f));
-				
+
 				Ellipse2D.Double circle = new Ellipse2D.Double( coordX, coordY, 20, 20);
-				
+
 				g2.fill(circle);
 
 				g2.setColor(Color.WHITE);
@@ -146,16 +146,18 @@ public class PanelDessin extends JPanel
 			}
 		}
 
+
 		//Dessine un message de fin
 		boolean estFini = false; //mettre un accesseur sur le controleur
 		if( estFini )
 		{
-			
+
 		}
 
 	}
-	
-	//Ca marche pas + c'est lourd 
+
+
+	//Ca marche pas + c'est lourd
 	// public boolean hoverShape(Point p) {
 	// 	return this.ctrl.getSommets().stream().anyMatch(t -> {
 	// 	    int hauteur = this.ctrl.getHauteurIHM() - 90;
@@ -181,14 +183,16 @@ public class PanelDessin extends JPanel
 	// 	});
 	//     }
 
+
 	/*       Classe        */
 	/*     GereSouris      */
-	private class GereSouris extends MouseAdapter 
+	private class GereSouris extends MouseAdapter
 	{
 		/*      Attributs      */
 		private Point point1;
 		private Point point2;
-		
+
+
 		/*      Méthodes       */
 		// Même truc : lourd + inutile
 		// public void mouseMoved(MouseEvent e) {
@@ -203,14 +207,15 @@ public class PanelDessin extends JPanel
 		// 	    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		//     });
 		// }
-		
-		public void mousePressed(MouseEvent e) 
+
+
+		public void mousePressed(MouseEvent e)
 		{
 			int posX, posY;
 			Controleur ctrl;
 
 			ctrl = PanelDessin.this.ctrl; // raccourci inhumain de l'argumentation
-			
+
 			posX = e.getX();
 			posY = e.getY();
 
@@ -220,8 +225,8 @@ public class PanelDessin extends JPanel
 			if ( p == null )
 			{
 				this.point1 = this.point2 = null;
-			} 
-			else 
+			}
+			else
 			{
 				this.point2 = this.point1;
 				this.point1 = p;
@@ -232,7 +237,7 @@ public class PanelDessin extends JPanel
 				Arete a = ctrl.trouverArete(this.point1, this.point2);
 
 				if ( ctrl.estColoriable(a) )
-				{	
+				{
 					ctrl.setAreteSelectionne(a.toString());
 				}
 				else

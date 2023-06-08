@@ -34,14 +34,14 @@ public class Arete
 
 
 	/*     Accesseurs      */
-	public Point getPointDepart () { return this.depart   ; }
-	public Point getPointArrivee() { return this.arrivee  ; }
-	public int   getCout        () { return this.cout     ; }
-	public Color getCouleur     () { return this.couleur  ; }
+	public Point getPointDepart ()  { return this.depart   ; }
+	public Point getPointArrivee()  { return this.arrivee  ; }
+	public int   getCout        ()  { return this.cout     ; }
+	public Color getCouleur     ()  { return this.couleur  ; }
 
 
 	/*     Modifieurs      */
-	public void setCout  ( int c ) {        this.cout = c ; }
+	public void setCout   ( int c ) {        this.cout = c ; }
 
 	public void setCouleur(Color c)
 	{
