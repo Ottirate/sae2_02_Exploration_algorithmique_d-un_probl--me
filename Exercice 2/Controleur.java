@@ -75,7 +75,7 @@ public class Controleur
 	public void majIhm ()   { this.ihm.maj(); }
 	public void finPartie()
 	{
-		int valeur = ((Integer)JOptionPane.showConfirmDialog( this.ihm, "Voulez vous rejouer ?", "Fin de la partie", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE));
+		int valeur = ((Integer)JOptionPane.showConfirmDialog( this.ihm, "Points : " + this.metier.nbPoint() + "\n Voulez vous rejouer ?", "Fin de la partie", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE));
 		if( valeur == JOptionPane.YES_OPTION ) 
 		{
 			this.metier.initialiser( "./Graphe.data" );

@@ -8,7 +8,6 @@ package graphe.metier;
 
 /*       Imports       */
 import java.util.*;
-
 import graphe.metier.Region;
 
 import java.nio.charset.StandardCharsets;
@@ -16,7 +15,8 @@ import java.io.FileInputStream;
 import java.awt.Color;
 import java.awt.geom.Line2D;
 
-public class Graphe {
+public class Graphe 
+{
 	private final static int NB_TOUR_MIN = 5;
 
 	/* Attributs Constants */
@@ -36,7 +36,8 @@ public class Graphe {
 	private int couleurMax;
 
 	/* Constructeur */
-	public Graphe() {
+	public Graphe() 
+	{
 		// initialisation de la partie
 		this.initialiser(Graphe.FICHIER);
 	}
@@ -50,23 +51,28 @@ public class Graphe {
 		return null;
 	}
 
-	public Color getColor() {
+	public Color getColor() 
+	{
 		return this.cptCouleur == COLORS.size() ? Color.LIGHT_GRAY : this.COLORS.get(this.cptCouleur);
 	}
 
-	public ArrayList<Point> getPoints() {
+	public ArrayList<Point> getPoints() 
+	{
 		return this.lstPoint;
 	}
 
-	public ArrayList<Arete> getAretes() {
+	public ArrayList<Arete> getAretes() 
+	{
 		return this.lstArete;
 	}
 
-	public ArrayList<Region> getRegions() {
+	public ArrayList<Region> getRegions() 
+	{
 		return this.lstRegion;
 	}
 
-	public Arete getArete(String id) {
+	public Arete getArete(String id) 
+	{
 		for (Arete a : this.lstArete)
 			if (a.toString().equals(id))
 				return a;
@@ -74,7 +80,8 @@ public class Graphe {
 		return null;
 	}
 
-	public Arete trouverArete(Point a, Point b) {
+	public Arete trouverArete(Point a, Point b) 
+	{
 		for (Arete areteA : a.getAretesAdjacentes())
 			for (Arete areteB : b.getAretesAdjacentes())
 				if (areteA.equals(areteB))
@@ -83,7 +90,8 @@ public class Graphe {
 		return null;
 	}
 
-	public Point trouverPoint(double x, double y) {
+	public Point trouverPoint(double x, double y) 
+	{
 		double distance;
 
 		for (Point p : this.lstPoint) {
@@ -97,7 +105,8 @@ public class Graphe {
 	}
 
 	/* Méthodes */
-	public void initialiser(String nomFic) {
+	public void initialiser(String nomFic) 
+	{
 		// Création des listes
 		this.lstPoint = new ArrayList<>();
 		this.lstArete = new ArrayList<>();
@@ -178,7 +187,8 @@ public class Graphe {
 		this.lstAreteColore = new ArrayList<>();
 	}
 
-	public void colorier(Arete a) {
+	public void colorier(Arete a) 
+	{
 		if (this.cptCouleur == COLORS.size())
 			return;
 		if (a == null)
@@ -190,17 +200,36 @@ public class Graphe {
 		this.nbColorier++;
 		this.lstAreteColore.add(a);
 
-		if (this.nbColorier >= this.couleurMax) {
+		if (this.nbColorier >= this.couleurMax) 
+		{
 			this.cptCouleur++;
 			this.couleurMax += (int) (Math.random() * 5) + Graphe.NB_TOUR_MIN;
 		}
 	}
 
-	public int nbPoint() {
+	public int nbPoint() 
+	{
+		int nbPoints = 0;
+		Region r;
+		ArrayList<Region> lstRegVue = new ArrayList<Region>();
 
+		for (Arete a : this.lstAreteColore)
+		{
+			nbPoints += a.getCout();
+
+			r = a.getPointArrivee().getRegion();
+			if (r != null && !lstRegVue.contains(r)) lstRegVue.add(r);
+
+			r = a.getPointDepart().getRegion();
+			if (r != null && !lstRegVue.contains(r)) lstRegVue.add(r);
+
+		}
+
+		return nbPoints + lstRegVue.size();
 	}
 
-	public boolean estColoriable(Arete a) {
+	public boolean estColoriable(Arete a) 
+	{
 		if (this.cptCouleur == COLORS.size())
 			return false;
 		if (a == null)
@@ -238,27 +267,30 @@ public class Graphe {
 	{ 
 		Color c = COLORS.get( this.cptCouleur );
 	
-	for (Arete a : a1.getPointDepart().getAretesAdjacentes())
-					if ( c.equals(a.getCouleur()) )
-				fr (Arete a2 : a1.getPoinArrivee().getAretesAdjacentes())
-					if ( c.equals(a2.getCouleur()) ) return true;
+		for (Arete a : a1.getPointDepart().getAretesAdjacentes())
+				if ( c.equals(a.getCouleur()) )
+			for (Arete a2 : a1.getPointArrivee().getAretesAdjacentes())
+				if ( c.equals(a2.getCouleur()) ) return true;
 
 						
 		return false;
 	}
 
-	private boolean areteCroise(Arete a1) {
+	private boolean areteCroise(Arete a1) 
+	{
 		int x1 = a1.getPointArrivee().getX();
 		int y1 = a1.getPointArrivee().getY();
-		int x2 = a1.getPointDepart().getX();
-		int y2 = a1.getPointDepat().getY();
+		int x2 = a1.getPointDepart ().getX();
+		int y2 = a1.getPointDepart ().getY();
 
-		for (Arete a2 : this.lstArete) {
-			if (a2.getCouleur() != null && !a1.pointIdentique(a2)) {
+		for (Arete a2 : this.lstArete) 
+		{
+			if (a2.getCouleur() != null && !a1.pointIdentique(a2)) 
+			{
 				int x3 = a2.getPointArrivee().getX();
 				int y3 = a2.getPointArrivee().getY();
 				int x4 = a2.getPointDepart().getX();
-				int y4 = a2.getPointDepat().getY();
+				int y4 = a2.getPointDepart().getY();
 
 				if (Line2D.linesIntersect(x1, y1, x2, y2, x3, y3, x4, y4))
 					return true;

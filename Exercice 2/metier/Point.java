@@ -34,9 +34,10 @@ public class Point
 
 
 	/*     Accesseurs      */
-	public int getId() { return this.id ; }
-	public int getX () { return this.x  ; }
-	public int getY () { return this.y  ; }
+	public int    getId    () { return this.id     ; }
+	public int    getX     () { return this.x      ; }
+	public int    getY     () { return this.y      ; }
+	public Region getRegion() { return this.region ; }
 
 	public List<Arete> getAretesAdjacentes() { return this.ensArete; }
 
